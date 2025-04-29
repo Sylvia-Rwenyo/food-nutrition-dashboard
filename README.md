@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Food Nutrition Dashboard
 
 The **Food Nutrition Dashboard** is a web application that visualizes nutritional data from food datasets. It processes CSV files containing food nutrition information using a Python script and displays the results in an interactive React frontend styled with Tailwind CSS. The app includes a filterable table, summary insights (e.g., top foods by nutrients), and caloric range groupings. The project is built with Vite and deployed on GitHub Pages.
@@ -204,3 +205,17 @@ npm run deploy
 - Built as part of a **Nutrition Data Analysis** project  
 - Data source: [Kaggle Dataset](https://www.kaggle.com/datasets/utsavdey1410/food-nutrition-dataset)  
 - Powered by: **Vite**, **React**, **Tailwind CSS**, **pandas**
+=======
+# React + Vite
+
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+
+Currently, two official plugins are available:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+>>>>>>> 35a472f (frontend addition)

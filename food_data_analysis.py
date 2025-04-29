@@ -59,7 +59,7 @@ def analyze_dataset(df):
     return analyses
 
 # Function to save analyses to JSON files
-def save_analyses(analyses, output_dir='analyses'):
+def save_analyses(analyses, output_dir='src/analyses'):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     
