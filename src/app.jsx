@@ -2,73 +2,65 @@ import { useState, useEffect } from 'react';
 import './App.css';
 
 function FoodTable({ data, filter }) {
-  const filteredData = data.filter(item =>
-    item.food.toLowerCase().includes(filter.toLowerCase())
-  );
+  const [sortKey, setSortKey] = useState('');
+  const [sortOrder, setSortOrder] = useState('asc');
+
+  const handleSort = (key) => {
+    if (sortKey === key) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortKey(key);
+      setSortOrder('desc');
+    }
+  };
+
+  const filteredData = data
+    .filter(item => item.food.toLowerCase().includes(filter.toLowerCase()))
+    .sort((a, b) => {
+      if (!sortKey) return 0;
+      const valA = parseFloat(a[sortKey]) || 0;
+      const valB = parseFloat(b[sortKey]) || 0;
+      return sortOrder === 'asc' ? valA - valB : valB - valA;
+    });
+
+  const sortIndicator = (key) =>
+    sortKey === key ? (sortOrder === 'asc' ? ' ↓' : ' ↑') : '';
 
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full bg-white border border-gray-200">
-        <thead>
-          <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-            <th className="py-3 px-6 text-left">Food</th>
-            <th className="py-3 px-6 text-left">Calories (kcal)</th>
-            <th className="py-3 px-6 text-left">Fat (g)</th>
-            <th className="py-3 px-6 text-left">Protein (g)</th>
-            <th className="py-3 px-6 text-left">Carbohydrates (g)</th>
-            <th className="py-3 px-6 text-left">Nutrition Density</th>
-          </tr>
-        </thead>
-        <tbody className="text-gray-600 text-sm font-light">
-          {filteredData.map((item, index) => (
-            <tr key={index} className="border-b border-gray-200 hover:bg-gray-100">
-              <td className="py-3 px-6 text-left whitespace-nowrap">{item.food}</td>
-              <td className="py-3 px-6 text-left">{item['Caloric Value']}</td>
-              <td className="py-3 px-6 text-left">{item.Fat}</td>
-              <td className="py-3 px-6 text-left">{item.Protein}</td>
-              <td className="py-3 px-6 text-left">{item.Carbohydrates}</td>
-              <td className="py-3 px-6 text-left">{item['Nutrition Density']}</td>
+      <div className="w-full h-full overflow-auto">
+        <table className="min-w-full border border-green-200 text-left text-sm">
+          <thead className="bg-green-50 text-green-800 uppercase tracking-wider">
+            <tr>
+              <th className="py-3 px-4 cursor-pointer" onClick={() => handleSort('food')}>
+                Food{sortIndicator('food')}
+              </th>
+              <th className="py-3 px-4 cursor-pointer" onClick={() => handleSort('Caloric Value')}>
+                Calories{sortIndicator('Caloric Value')}
+              </th>
+              <th className="py-3 px-4 cursor-pointer" onClick={() => handleSort('Fat')}>
+                Fat (g){sortIndicator('Fat')}
+              </th>
+              <th className="py-3 px-4 cursor-pointer" onClick={() => handleSort('Protein')}>
+                Protein (g){sortIndicator('Protein')}
+              </th>
+              <th className="py-3 px-4 cursor-pointer" onClick={() => handleSort('Carbohydrates')}>
+                Carbs (g){sortIndicator('Carbohydrates')}
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
-function SummaryCard({ topFoods, highNutrientFoods }) {
-  return (
-    <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-      <h2 className="text-xl font-bold mb-4">Nutrition Insights</h2>
-      {Object.entries(topFoods).map(([nutrient, foods]) => (
-        <div key={nutrient} className="mb-4">
-          <h3 className="text-lg font-semibold">Top 5 by {nutrient}</h3>
-          <ul className="list-disc pl-5">
-            {foods.map((food, index) => (
-              <li key={index}>{food.food}: {food[nutrient]}</li>
+          </thead>
+          <tbody className="divide-y divide-green-100">
+            {filteredData.map((item, index) => (
+              <tr key={index} className="hover:bg-green-50">
+                <td className="py-3 px-4">{item.food}</td>
+                <td className="py-3 px-4">{item['Caloric Value']}</td>
+                <td className="py-3 px-4">{item.Fat}</td>
+                <td className="py-3 px-4">{item.Protein}</td>
+                <td className="py-3 px-4">{item.Carbohydrates}</td>
+              </tr>
             ))}
-          </ul>
-        </div>
-      ))}
-      <div>
-        <h3 className="text-lg font-semibold">High Nutrient Foods</h3>
-        <p>{highNutrientFoods.length} foods exceed median values for key nutrients.</p>
+          </tbody>
+        </table>
       </div>
-    </div>
-  );
-}
-
-function CaloricGroups({ caloricGroups }) {
-  return (
-    <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-      <h2 className="text-xl font-bold mb-4">Foods by Caloric Range</h2>
-      {caloricGroups.map((group, index) => (
-        <div key={index} className="mb-4">
-          <h3 className="text-lg font-semibold">{group.Caloric_Range}</h3>
-          <p>{group.food.length} foods, e.g., {group.food.slice(0, 3).join(', ')}</p>
-        </div>
-      ))}
-    </div>
   );
 }
 
@@ -98,28 +90,28 @@ function App() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-4">
-      <h1 className="text-3xl font-bold text-center mb-6">Food Nutrition Dashboard</h1>
-      <div className="mb-6">
+    <div className="text-center" id="root">
+      <header className="mb-10">
+        <h1 className="text-4xl font-bold text-green-700">Nutripedia</h1>
+        <p className="text-gray-600 mt-2">A nutrition reference catalogue</p>
+      </header>
+
+      <div className="mb-8">
         <input
           type="text"
-          placeholder="Filter by food name..."
+          placeholder="Search for a food..."
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full md:w-1/2 mx-auto block p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
         />
       </div>
-      {foodData.length > 0 && Object.keys(analyses).length > 0 ? (
+
+      {foodData.length > 0 ? (
         <>
-          <SummaryCard
-            topFoods={analyses.top_foods || {}}
-            highNutrientFoods={analyses.high_nutrient_foods || []}
-          />
-          <CaloricGroups caloricGroups={analyses.caloric_groups || []} />
           <FoodTable data={foodData} filter={filter} />
         </>
       ) : (
-        <p className="text-center">Loading data...</p>
+        <p className="text-gray-500 text-center">Loading data...</p>
       )}
     </div>
   );
